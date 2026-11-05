@@ -14,6 +14,14 @@ resource "aws_launch_template" "PetclinicServerLT" {
   key_name = var.mykey
   vpc_security_group_ids = [aws_security_group.dev-server-sg.id]
   user_data = filebase64("petclinicserver-userdata.sh")
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    ebs {
+      volume_size = 20
+      volume_type = "gp3"
+      encrypted   = true
+    }
+  }
 }
 
 resource "aws_instance" "PetclinicServer" {
