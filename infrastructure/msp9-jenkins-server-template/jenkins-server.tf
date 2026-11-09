@@ -53,6 +53,13 @@ resource "aws_security_group" "tf-jenkins-sec-gr" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 8000
+    protocol    = "tcp"
+    to_port     = 8000
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     protocol    = -1
@@ -102,6 +109,23 @@ resource "aws_iam_instance_profile" "tf-jenkins-server-profile" {
   role = aws_iam_role.tf-jenkins-server-role.name
 }
 
+resource "null_resource" "jenkins_initial_password" {
+  depends_on = [aws_instance.tf-jenkins-server]
+
+  provisioner "remote-exec" {
+    inline = [
+      "until sudo test -f /var/lib/jenkins/secrets/initialAdminPassword; do sleep 5; done",
+      "sudo cat /var/lib/jenkins/secrets/initialAdminPassword",
+    ]
+
+    connection {
+      type        = "ssh"
+      host        = aws_instance.tf-jenkins-server.public_ip
+      user        = "ec2-user" # or ubuntu
+      private_key = file(pathexpand("~/.ssh/${var.mykey}.pem"))
+    }
+  }
+}
 
 output "JenkinsDNS" {
   value = aws_instance.tf-jenkins-server.public_dns

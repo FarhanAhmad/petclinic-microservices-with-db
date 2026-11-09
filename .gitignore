@@ -26,3 +26,7 @@ generated/
 infrastructure/.terraform.lock.hcl
 infrastructure/terraform.tfstate
 infrastructure/terraform.tfstate.backup
+*.hcl
+infrastructure/msp9-jenkins-server-template/.terraform.tfstate.lock.info
+infrastructure/msp9-jenkins-server-template/terraform.tfstate
+infrastructure/msp9-jenkins-server-template/terraform.tfstate.backup

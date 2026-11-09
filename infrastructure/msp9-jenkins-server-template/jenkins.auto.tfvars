@@ -1,4 +1,4 @@
-mykey = "petclinic"
+mykey = "EC2LinuxInstanceKey"
 ami = "ami-01816d07b1128cd2d"
 region = "us-east-1"
 instance_type = "t3a.large"

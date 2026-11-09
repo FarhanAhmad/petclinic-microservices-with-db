@@ -6,7 +6,7 @@ hostnamectl set-hostname jenkins-server
 # install git
 dnf install git -y
 # install java 11
-dnf install fontconfig java-17-amazon-corretto -y
+dnf install fontconfig java-21-amazon-corretto -y
 
 # install jenkins
 wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
@@ -32,5 +32,5 @@ pip3 install ansible
 # install boto3
 pip3 install boto3 botocore
 # install terraform
-wget https://releases.hashicorp.com/terraform/1.11.4/terraform_1.11.4_linux_amd64.zip
-unzip terraform_1.11.4_linux_amd64.zip -d /usr/local/bin
+wget https://releases.hashicorp.com/terraform/1.17.1/terraform_1.17.1_linux_amd64.zip
+unzip terraform_1.17.1_linux_amd64.zip -d /usr/local/bin
