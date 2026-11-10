@@ -17,6 +17,10 @@ data "aws_subnets" "mysubnets" {
   }
 }
 
+data "aws_subnet" "picked_subnet" {
+  id = data.aws_subnets.mysubnets.ids[0]
+}
+
 resource "aws_security_group" "k8s-sec-gr" {
   name = var.sec-gr-k8s
   vpc_id = data.aws_vpc.name.id
@@ -97,8 +101,8 @@ resource "aws_instance" "kube-master" {
   iam_instance_profile = aws_iam_instance_profile.petclinic-master-server-profile.name
   vpc_security_group_ids = [aws_security_group.k8s-sec-gr.id]
   key_name = var.mykey
-  subnet_id = data.aws_subnets.mysubnets.ids[0]
-  availability_zone = var.aval_zone
+  subnet_id = data.aws_subnet.picked_subnet.id
+  availability_zone = data.aws_subnet.picked_subnet.availability_zone
   tags = {
     Name = "kube-master"
     Project = "tera-kube-ans"
@@ -114,8 +118,8 @@ resource "aws_instance" "workers" {
   instance_type = var.worker_instance_type
   vpc_security_group_ids = [aws_security_group.k8s-sec-gr.id]
   key_name = var.mykey
-  subnet_id = data.aws_subnets.mysubnets.ids[0]
-  availability_zone = var.aval_zone
+  subnet_id = data.aws_subnet.picked_subnet.id
+  availability_zone = data.aws_subnet.picked_subnet.availability_zone
   tags = {
     Name = "worker-${count.index + 1}"
     Project = "tera-kube-ans"
