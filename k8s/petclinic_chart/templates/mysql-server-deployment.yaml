@@ -27,9 +27,9 @@ spec:
       containers:
         - env:
             - name: MYSQL_DATABASE
-              value: {{ .Values.database.name | quote }}
+              value: petclinicdb
             - name: MYSQL_ROOT_PASSWORD
-              value: {{ .Values.database.password | required "database.password is required" | quote }}
+              value: petclinicpass
           image: mysql:5.7
           name: mysql-server
           ports:
