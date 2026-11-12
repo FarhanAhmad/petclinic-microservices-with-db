@@ -96,13 +96,17 @@ resource "aws_iam_instance_profile" "petclinic-master-server-profile" {
 }
 
 resource "aws_instance" "kube-master" {
-  ami = "ami-005fc0f236362e99f"
+  ami = var.myami
   instance_type = var.master_instance_type
   iam_instance_profile = aws_iam_instance_profile.petclinic-master-server-profile.name
   vpc_security_group_ids = [aws_security_group.k8s-sec-gr.id]
   key_name = var.mykey
   subnet_id = data.aws_subnet.picked_subnet.id
   availability_zone = data.aws_subnet.picked_subnet.availability_zone
+  root_block_device {
+    volume_size = var.master_device_size
+    volume_type = "gp3"
+  }
   tags = {
     Name = "kube-master"
     Project = "tera-kube-ans"
@@ -114,12 +118,16 @@ resource "aws_instance" "kube-master" {
 
 resource "aws_instance" "workers" {
   count = var.worker_count
-  ami = "ami-005fc0f236362e99f"
+  ami = var.myami
   instance_type = var.worker_instance_type
   vpc_security_group_ids = [aws_security_group.k8s-sec-gr.id]
   key_name = var.mykey
   subnet_id = data.aws_subnet.picked_subnet.id
   availability_zone = data.aws_subnet.picked_subnet.availability_zone
+  root_block_device {
+    volume_size = var.worker_device_size
+    volume_type = "gp3"
+  }
   tags = {
     Name = "worker-${count.index + 1}"
     Project = "tera-kube-ans"
